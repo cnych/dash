@@ -1,13 +1,9 @@
 package controllers
 
 import (
-	"bufio"
-	"context"
-	"io"
 	"net/http"
 	"strconv"
 
-	"github.com/cnych/dash/global"
 	"github.com/cnych/dash/k8s"
 	"github.com/gin-gonic/gin"
 	corev1 "k8s.io/api/core/v1"
@@ -49,31 +45,8 @@ func GetKubeLogs(c *gin.Context) {
 		Timestamps: timestamps,
 		Previous:   previous,
 	}
-
-	req := global.K8sClient().CoreV1().Pods(namespace).GetLogs(podName, &opts)
-	stream, err := req.Stream(context.TODO())
-	if err != nil {
+	if err := k8s.Client.Pod.LogsStream(podName, namespace, &opts, kubeLogger); err != nil {
 		klog.Error(err, "GetLogs stream failed")
-		_ = kubeLogger.Write([]byte(err.Error()))
-		return
-	}
-	defer stream.Close()
-
-	buf := bufio.NewReader(stream)
-	for { // 一直从buffer中读取数据去
-		bytes, err := buf.ReadBytes('\n')
-		if err != nil {
-			if err != io.EOF {
-				klog.Error(err, "GetLogs stream failed")
-				_ = kubeLogger.Write([]byte(err.Error()))
-				return
-			}
-			return
-		}
-		if err := kubeLogger.Write(bytes); err != nil {
-			klog.Error(err, "GetLogs stream failed")
-			_ = kubeLogger.Write([]byte(err.Error()))
-			return
-		}
+		_, _ = kubeLogger.Write([]byte(err.Error()))
 	}
 }

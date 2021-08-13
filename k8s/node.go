@@ -8,12 +8,22 @@ import (
 	"k8s.io/client-go/kubernetes"
 )
 
-func GetNodes(clientset *kubernetes.Clientset, labels string) ([]corev1.Node, error) {
+type NodeClient struct {
+	clientset *kubernetes.Clientset
+}
+
+func NewNodeClient(clientset *kubernetes.Clientset) *NodeClient {
+	return &NodeClient{
+		clientset: clientset,
+	}
+}
+
+func (cli *NodeClient) List(labels string) ([]corev1.Node, error) {
 	opts := metav1.ListOptions{}
 	if labels != "" {
 		opts.LabelSelector = labels
 	}
-	nodeList, err := clientset.CoreV1().Nodes().List(context.Background(), opts)
+	nodeList, err := cli.clientset.CoreV1().Nodes().List(context.Background(), opts)
 	if err != nil {
 		return nil, err
 	}

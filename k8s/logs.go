@@ -30,8 +30,12 @@ func NewKubeLogger(w http.ResponseWriter, r *http.Request, responseHeader http.H
 	return kubeLogger, nil
 }
 
-func (kl *KubeLogger) Write(data []byte) error {
-	return kl.Conn.WriteMessage(websocket.TextMessage, data)
+//Write(p []byte) (n int, err error)
+func (kl *KubeLogger) Write(data []byte) (int, error) {
+	if err := kl.Conn.WriteMessage(websocket.TextMessage, data); err != nil {
+		return 0, err
+	}
+	return len(data), nil
 }
 
 func (kl *KubeLogger) Close() error {
