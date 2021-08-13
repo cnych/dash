@@ -14,7 +14,7 @@ func main() {
 	// 初始化 klog，也可以绑定到本地的flagset
 	klog.InitFlags(nil)
 	defer klog.Flush()
-	flag.Set("logtostderr", "false")
+	//flag.Set("logtostderr", "false")
 	flag.Set("alsologtostderr", "false")
 	flag.Parse()
 

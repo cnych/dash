@@ -18,7 +18,7 @@ func initK8sClient() error {
 	var config *rest.Config
 	// inCluster（Pod）、Kubeconfig（kubectl）
 	// 通过flag传递kubeconfig参数
-	kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "config")
+	kubeconfig := filepath.Join(homedir.HomeDir(), ".kube", "ydzs-config")
 	// 首先使用 inCluster 模式（RBAC -> list|get node）
 	if config, err = rest.InClusterConfig(); err != nil {
 		// 使用 kubeconfig 模式

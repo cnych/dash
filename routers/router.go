@@ -20,6 +20,8 @@ func InitApi(eng *gin.Engine) {
 	api.GET("nodes", controllers.GetNodeList)
 	// 获取Metrics指标数据
 	api.POST("metrics", controllers.GetMetrics)
+	// 获取Pod(容器)日志
+	api.GET("namespaces/:namespace/pods/:pod/logs", controllers.GetKubeLogs)
 }
 
 // CorsMiddleware 允许跨域的一个中间件
