@@ -25,8 +25,6 @@ func InitApi(eng *gin.Engine) {
 	// 执行Pod(容器)命令
 	//ws://127.0.0.1:8888/api/v1/namespaces/kube-ops/pods/gitlab-f4d95db8-fj24z/shell
 	api.GET("namespaces/:namespace/pods/:pod/shell", controllers.HandleTerminal)
-
-	//	router.HandleFunc("/ws/{namespace}/{pod}/{container}/webshell", serveWsTerminal)
 }
 
 // CorsMiddleware 允许跨域的一个中间件
