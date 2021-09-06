@@ -55,7 +55,7 @@ func HandleTerminal(c *gin.Context) {
 	namespace := c.Param("namespace")
 	podName := c.Param("pod")
 	container := c.Query("container")
-	cmd := []string {
+	cmd := []string{
 		"/bin/sh", "-c", "clear;(bash || sh)",
 	}
 	klog.V(2).InfoS("get kube logs request params",

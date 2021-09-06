@@ -6,7 +6,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-
 type KubeLogger struct {
 	Conn *websocket.Conn
 }

@@ -9,6 +9,17 @@ import (
 	"k8s.io/klog/v2"
 )
 
+// initialize 全局的初始化入口
+func initialize() error {
+	var err error
+	//todo，初始化配置文件
+	// 初始化kube client
+	if err = k8s.NewKubeClient(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func main() {
 	// todo，传递解析flag参数
 	// 初始化 klog，也可以绑定到本地的flagset
@@ -23,6 +34,7 @@ func main() {
 		klog.V(2).ErrorS(err, "init global failed")
 		return
 	}
+
 	serv := gin.Default()
 	// 注册路由
 	routers.InitApi(serv)
@@ -32,15 +44,3 @@ func main() {
 	}
 }
 
-// initialize 全局的初始化入口
-func initialize() error {
-	var err error
-
-	//todo，初始化配置文件
-
-	// 初始化kube client
-	if err = k8s.NewKubeClient(); err != nil {
-		return err
-	}
-	return nil
-}

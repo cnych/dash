@@ -13,6 +13,15 @@ import (
 	"k8s.io/client-go/tools/remotecommand"
 )
 
+type TtyHandler interface {
+	Stdin() io.Reader
+	Stdout() io.Writer
+	Stderr() io.Writer
+	Tty() bool
+	remotecommand.TerminalSizeQueue
+	Done()
+}
+
 type PodClient struct {
 	clientset *kubernetes.Clientset
 	config    *restclient.Config
@@ -57,15 +66,6 @@ func (cli *PodClient) LogsStream(name, namespace string, opts *corev1.PodLogOpti
 		}
 	}
 
-}
-
-type TtyHandler interface {
-	Stdin() io.Reader
-	Stdout() io.Writer
-	Stderr() io.Writer
-	Tty() bool
-	remotecommand.TerminalSizeQueue
-	Done()
 }
 
 func (cli *PodClient) Exec(cmd []string, handler TtyHandler, namespace, pod, container string) error {

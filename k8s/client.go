@@ -1,10 +1,8 @@
 package k8s
 
 import (
-	"net/http"
 	"path/filepath"
 
-	"github.com/gorilla/websocket"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -51,12 +49,4 @@ func NewKubeClient() error {
 		Node: NewNodeClient(clientset),
 	}
 	return nil
-}
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
 }

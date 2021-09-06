@@ -18,10 +18,10 @@ type ShellMessage struct {
 }
 
 type KubeShell struct {
-	conn *websocket.Conn
-	sizeChan   chan remotecommand.TerminalSize
+	conn     *websocket.Conn
+	sizeChan chan remotecommand.TerminalSize
 	stopChan chan struct{}
-	tty bool
+	tty      bool
 }
 
 var EOT = "\u0004"
@@ -34,10 +34,10 @@ func NewKubeShell(w http.ResponseWriter, r *http.Request, responseHeader http.He
 		return nil, err
 	}
 	kubeShell := &KubeShell{
-		conn: conn,
+		conn:     conn,
 		sizeChan: make(chan remotecommand.TerminalSize),
 		stopChan: make(chan struct{}),
-		tty: true,
+		tty:      true,
 	}
 	return kubeShell, nil
 }
@@ -60,7 +60,7 @@ func (k *KubeShell) Tty() bool {
 
 func (k *KubeShell) Next() *remotecommand.TerminalSize {
 	select {
-	case size := <- k.sizeChan:
+	case size := <-k.sizeChan:
 		return &size
 	case <-k.stopChan:
 		return nil
@@ -95,7 +95,6 @@ func (k *KubeShell) Read(p []byte) (n int, err error) {
 	}
 }
 
-
 func (k *KubeShell) Write(p []byte) (n int, err error) {
 	msg, err := json.Marshal(ShellMessage{
 		Type: "write",
@@ -109,4 +108,3 @@ func (k *KubeShell) Write(p []byte) (n int, err error) {
 	}
 	return len(p), nil
 }
-
