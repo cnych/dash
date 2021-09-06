@@ -50,48 +50,48 @@ func (mc *MetricsCategory) GenerateQuery() *PrometheusQuery {
 }
 
 type MetricsQuery struct {
-	MemoryUsage    *MetricsCategory `json:"memoryUsage,omitempty"`
-	MemoryRequests *MetricsCategory `json:"memoryRequests,omitempty"`
-	MemoryLimits   *MetricsCategory `json:"memoryLimits,omitempty"`
-	MemoryCapacity *MetricsCategory `json:"memoryCapacity,omitempty"`
+	MemoryUsage               *MetricsCategory `json:"memoryUsage,omitempty"`
+	MemoryRequests            *MetricsCategory `json:"memoryRequests,omitempty"`
+	MemoryLimits              *MetricsCategory `json:"memoryLimits,omitempty"`
+	MemoryCapacity            *MetricsCategory `json:"memoryCapacity,omitempty"`
 	MemoryAllocatableCapacity *MetricsCategory `json:"memoryAllocatableCapacity,omitempty"`
-	CpuUsage       *MetricsCategory `json:"cpuUsage,omitempty"`
-	CpuLimits      *MetricsCategory `json:"cpuLimits,omitempty"`
-	CpuRequests    *MetricsCategory `json:"cpuRequests,omitempty"`
-	CpuCapacity    *MetricsCategory `json:"cpuCapacity,omitempty"`
-	CpuAllocatableCapacity *MetricsCategory `json:"cpuAllocatableCapacity,omitempty"`
-	FsSize         *MetricsCategory `json:"fsSize,omitempty"`
-	FsUsage        *MetricsCategory `json:"fsUsage,omitempty"`
-	PodUsage       *MetricsCategory `json:"podUsage,omitempty"`
-	PodCapacity    *MetricsCategory `json:"podCapacity,omitempty"`
-	PodAllocatableCapacity *MetricsCategory `json:"podAllocatableCapacity,omitempty"`
+	CpuUsage                  *MetricsCategory `json:"cpuUsage,omitempty"`
+	CpuLimits                 *MetricsCategory `json:"cpuLimits,omitempty"`
+	CpuRequests               *MetricsCategory `json:"cpuRequests,omitempty"`
+	CpuCapacity               *MetricsCategory `json:"cpuCapacity,omitempty"`
+	CpuAllocatableCapacity    *MetricsCategory `json:"cpuAllocatableCapacity,omitempty"`
+	FsSize                    *MetricsCategory `json:"fsSize,omitempty"`
+	FsUsage                   *MetricsCategory `json:"fsUsage,omitempty"`
+	PodUsage                  *MetricsCategory `json:"podUsage,omitempty"`
+	PodCapacity               *MetricsCategory `json:"podCapacity,omitempty"`
+	PodAllocatableCapacity    *MetricsCategory `json:"podAllocatableCapacity,omitempty"`
 }
 
 type PrometheusQuery struct {
-	CpuUsage        string
-	CpuRequests     string
-	CpuLimits       string
-	CpuCapacity     string
-	CpuAllocatableCapacity string
-	MemoryUsage     string
-	MemoryCapacity  string
-	MemoryRequests  string
-	MemoryLimits    string
+	CpuUsage                  string
+	CpuRequests               string
+	CpuLimits                 string
+	CpuCapacity               string
+	CpuAllocatableCapacity    string
+	MemoryUsage               string
+	MemoryCapacity            string
+	MemoryRequests            string
+	MemoryLimits              string
 	MemoryAllocatableCapacity string
-	FsUsage         string
-	FsSize          string
-	NetworkReceive  string
-	NetworkTransmit string
-	PodUsage        string
-	PodCapacity     string
-	PodAllocatableCapacity string
-	DiskUsage       string
-	DiskCapacity    string
+	FsUsage                   string
+	FsSize                    string
+	NetworkReceive            string
+	NetworkTransmit           string
+	PodUsage                  string
+	PodCapacity               string
+	PodAllocatableCapacity    string
+	DiskUsage                 string
+	DiskCapacity              string
 }
 
 func (pq *PrometheusQuery) GetValueByField(field string) string {
 	e := reflect.ValueOf(pq).Elem()
-	for i :=0;i<e.NumField();i++ {
+	for i := 0; i < e.NumField(); i++ {
 		if e.Type().Field(i).Name == field {
 			return e.Field(i).Interface().(string)
 		}
@@ -100,17 +100,17 @@ func (pq *PrometheusQuery) GetValueByField(field string) string {
 }
 
 type PrometheusQueryResp struct {
-	Status string `json:"status"`
-	Data *PrometheusQueryRespData `json:"data"`
+	Status string                   `json:"status"`
+	Data   *PrometheusQueryRespData `json:"data"`
 }
 
 type PrometheusQueryRespData struct {
-	ResultType string `json:"resultType"`
-	Result []PrometheusQueryRespResult `json:"result"`
+	ResultType string                      `json:"resultType"`
+	Result     []PrometheusQueryRespResult `json:"result"`
 }
 
 type PrometheusQueryRespResult struct {
-	Metric interface{} `json:"metric"`
+	Metric interface{}   `json:"metric"`
 	Values []interface{} `json:"values"`
 }
 

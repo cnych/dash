@@ -111,4 +111,3 @@ func GetMetrics(c *gin.Context) {
 		"metrics": tracker.Metrics,
 	})
 }
-

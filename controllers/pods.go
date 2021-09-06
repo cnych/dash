@@ -50,3 +50,37 @@ func GetKubeLogs(c *gin.Context) {
 		_, _ = kubeLogger.Write([]byte(err.Error()))
 	}
 }
+
+func HandleTerminal(c *gin.Context) {
+	namespace := c.Param("namespace")
+	podName := c.Param("pod")
+	container := c.Query("container")
+	cmd := []string {
+		"/bin/sh", "-c", "clear;(bash || sh)",
+	}
+	klog.V(2).InfoS("get kube logs request params",
+		"namespace", namespace, "pod", podName, "container", container, "cmd", cmd)
+
+	if _, err := k8s.Client.Pod.Get(podName, namespace); err != nil {
+		klog.Error(err, "get pod failed")
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// todo，校验下 pod
+	kubeShell, err := k8s.NewKubeShell(c.Writer, c.Request, nil)
+	if err != nil {
+		klog.Error(err, "init kube shell failed")
+		c.String(http.StatusBadRequest, err.Error())
+		return
+	}
+	defer func() {
+		_ = kubeShell.Close()
+	}()
+
+	if err := k8s.Client.Pod.Exec(cmd, kubeShell, namespace, podName, container); err != nil {
+		klog.Error(err, "exec pod failed")
+		c.String(http.StatusBadRequest, err.Error())
+	}
+
+}

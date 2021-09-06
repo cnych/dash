@@ -1,8 +1,10 @@
 package k8s
 
 import (
+	"net/http"
 	"path/filepath"
 
+	"github.com/gorilla/websocket"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -11,7 +13,7 @@ import (
 
 // kubeclient 定义包含所有需要操作的client
 type kubeclient struct {
-	Pod *PodClient
+	Pod  *PodClient
 	Node *NodeClient
 }
 
@@ -40,13 +42,21 @@ func initK8sClient() (*kubernetes.Clientset, *rest.Config, error) {
 }
 
 func NewKubeClient() error {
-	clientset, _, err := initK8sClient()
+	clientset, config, err := initK8sClient()
 	if err != nil {
 		return err
 	}
 	Client = &kubeclient{
-		Pod: NewPodClient(clientset),
+		Pod:  NewPodClient(clientset, config),
 		Node: NewNodeClient(clientset),
 	}
 	return nil
+}
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
